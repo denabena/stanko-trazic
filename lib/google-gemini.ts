@@ -2,10 +2,17 @@ import {
   GEMINI_GENERATE_CONTENT_MODEL,
   GEMINI_REST_API_BASE,
   GEMINI_WINNER_SUMMARY_MAX_CHARS,
+  PARKING_ZONE_1_STREETS,
+  PARKING_ZONE_2_STREETS,
+  PARKING_ZONE_3_STREETS,
+  PARKING_ZONE_4_1_STREETS,
+  PARKING_ZONE_4_2_STREETS,
+  PARKING_ZONE_VALID_CODES,
 } from "@/constants/index";
 import type {
   GeminiComparisonNarrative,
   GeminiComparisonSummaryRequest,
+  ParkingZoneLookupResult,
 } from "@/lib/types";
 
 function resolveGeminiModelId(): string {
@@ -159,6 +166,73 @@ export async function requestGeminiComparisonNarrative(
     }
     const trimmed = raw.trim().slice(0, GEMINI_WINNER_SUMMARY_MAX_CHARS);
     return { plainLanguageSummary: trimmed };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+function buildParkingZonePrompt(address: string): string {
+  return [
+    "You are a Zagreb parking zone classifier.",
+    "Given a street address in Zagreb, Croatia, respond with ONLY the zone code.",
+    "Valid responses: 1, 2, 3, 4.1, 4.2, none",
+    "",
+    "Zone 1 (monthly pass: 1051.20 EUR) streets:",
+    PARKING_ZONE_1_STREETS.join(", "),
+    "",
+    "Zone 2 (monthly pass: 47.80 EUR) streets:",
+    PARKING_ZONE_2_STREETS.join(", "),
+    "",
+    "Zone 3 (monthly pass: 17.00 EUR) streets:",
+    PARKING_ZONE_3_STREETS.join(", "),
+    "",
+    "Zone 4.1 (monthly pass: 13.30 EUR):",
+    PARKING_ZONE_4_1_STREETS.join(", "),
+    "",
+    "Zone 4.2 (monthly pass: 26.50 EUR):",
+    PARKING_ZONE_4_2_STREETS.join(", "),
+    "",
+    'If the street is not in any list, respond "none".',
+    "Do not explain. Reply with exactly one value: 1, 2, 3, 4.1, 4.2, or none.",
+    "",
+    `Address: ${address}`,
+  ].join("\n");
+}
+
+function parseZoneCode(raw: string): string | null {
+  const trimmed = raw.trim().toLowerCase();
+  const match = PARKING_ZONE_VALID_CODES.find((code) => trimmed === code);
+  return match ?? null;
+}
+
+export async function requestParkingZoneFromGemini(
+  address: string,
+): Promise<ParkingZoneLookupResult | null> {
+  try {
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    if (!apiKey) {
+      return null;
+    }
+    const prompt = buildParkingZonePrompt(address);
+    const url = buildGeminiUrl(apiKey);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+      }),
+    });
+    if (!response.ok) {
+      return null;
+    }
+    const payload: unknown = await response.json();
+    const raw = extractTextFromGeminiPayload(payload);
+    if (raw === null) {
+      return null;
+    }
+    const zoneCode = parseZoneCode(raw);
+    return { zoneCode };
   } catch (error) {
     console.error(error);
     return null;

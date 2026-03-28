@@ -1,36 +1,19 @@
 import { NextResponse } from "next/server";
 
-import {
-  readFiniteNumber,
-  readNonEmptyString,
-} from "@/lib/api-request-guards";
-import {
-  requestParkingZoneLookup,
-  resolveLatLngForPlacesRequest,
-} from "@/lib/google-places";
+import { readNonEmptyString } from "@/lib/api-request-guards";
+import { requestParkingZoneFromGemini } from "@/lib/google-gemini";
 
-type ParkingParsed =
-  | { ok: true; kind: "coords"; latitude: number; longitude: number }
-  | { ok: true; kind: "address"; address: string }
-  | { ok: false; error: string };
-
-function parseParkingBody(body: unknown): ParkingParsed {
+function parseParkingBody(
+  body: unknown,
+): { ok: true; address: string } | { ok: false; error: string } {
   if (typeof body !== "object" || body === null) {
     return { ok: false, error: "Body must be a JSON object" };
   }
-  const lat = readFiniteNumber((body as { latitude?: unknown }).latitude);
-  const lng = readFiniteNumber((body as { longitude?: unknown }).longitude);
-  if (lat !== null && lng !== null) {
-    return { ok: true, kind: "coords", latitude: lat, longitude: lng };
-  }
   const address = readNonEmptyString((body as { address?: unknown }).address);
-  if (address !== null) {
-    return { ok: true, kind: "address", address };
+  if (address === null) {
+    return { ok: false, error: "address is required" };
   }
-  return {
-    ok: false,
-    error: "Provide latitude and longitude, or address",
-  };
+  return { ok: true, address };
 }
 
 export async function POST(request: Request) {
@@ -40,37 +23,7 @@ export async function POST(request: Request) {
     if (!parsed.ok) {
       return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
-    if (typeof apiKey !== "string" || apiKey.length === 0) {
-      return NextResponse.json(
-        { error: "Places API is not configured" },
-        { status: 500 },
-      );
-    }
-    let latitude: number;
-    let longitude: number;
-    if (parsed.kind === "coords") {
-      latitude = parsed.latitude;
-      longitude = parsed.longitude;
-    } else {
-      const resolved = await resolveLatLngForPlacesRequest({
-        address: parsed.address,
-        apiKey,
-      });
-      if (resolved === null) {
-        return NextResponse.json(
-          { error: "Could not resolve address to coordinates" },
-          { status: 400 },
-        );
-      }
-      latitude = resolved.lat;
-      longitude = resolved.lng;
-    }
-    const zone = await requestParkingZoneLookup({
-      latitude,
-      longitude,
-      apiKey,
-    });
+    const zone = await requestParkingZoneFromGemini(parsed.address);
     if (zone === null) {
       return NextResponse.json(
         { error: "Could not resolve parking zone" },
