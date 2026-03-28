@@ -11,6 +11,7 @@ Create **`.env.local`** in the project root (copy from [`.env.local.example`](.e
 | `GOOGLE_MAPS_DIRECTIONS_API_KEY` | Yes* | Commute (Directions API) |
 | `GOOGLE_PLACES_API_KEY` | Yes* | Autocomplete, neighborhood nearby search, geocoding / parking |
 | `GOOGLE_GEMINI_API_KEY` | No | Short “why this won” text after results |
+| `GEMINI_MODEL` | No | Override Gemini model id (default `gemini-2.5-flash`) |
 
 \*You can use the **same** Google Cloud API key for both if **Directions API**, **Places API (New)**, and **Geocoding API** are enabled for that key in [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials.
 
@@ -24,6 +25,8 @@ Create **`.env.local`** in the project root (copy from [`.env.local.example`](.e
    GOOGLE_GEMINI_API_KEY=paste_your_key_here
    ```
 5. Restart the dev server.
+
+The app calls **`gemini-2.5-flash`** by default (older ids such as `gemini-2.0-flash` are unavailable for new API keys). To use another model from [AI Studio](https://aistudio.google.com/), set `GEMINI_MODEL` in `.env.local`.
 
 Do **not** commit `.env.local` or paste API keys into app source files.
 

@@ -131,6 +131,26 @@ export interface GeminiComparisonNarrative {
   plainLanguageSummary: string;
 }
 
+/** POST body for `/api/gemini-comparison-summary` — structured facts for the model */
+export interface GeminiComparisonSummaryRequest {
+  priority: UserPriority;
+  apartments: Array<{
+    addressLine: string;
+    rentEurosPerMonth: number;
+    utilitiesEurosPerMonth: number;
+    commuteEurosPerMonth: number;
+    parkingEurosPerMonth: number;
+    totalEurosPerMonth: number;
+    commuteDurationMinutes: number;
+    qualityOfLifeScoreOutOf100: number;
+  }>;
+  winnerAddress: string;
+  runnerUpAddress: string;
+  monthlyTotalDifferenceEuros: number;
+  dailyCommuteMinutesSavedVersusRunnerUp: number;
+  qualityOfLifeScoreDifferenceVersusRunnerUp: number;
+}
+
 /** Firestore document shape for a saved comparison (IDs only, no secrets) */
 export interface FirestoreComparisonDocument {
   ownerUserId: string;

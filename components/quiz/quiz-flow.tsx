@@ -28,6 +28,7 @@ import type {
   ApartmentEntryStepState,
   ApartmentMonthlyRealCostBreakdown,
   ComparisonWinnerInsight,
+  GeminiComparisonSummaryRequest,
   PersistedComparisonSession,
   TransitMode,
   TransitPriorityQuizAnswers,
@@ -195,7 +196,7 @@ function ResultsPhase({
           <p className="mb-1 text-xs font-medium uppercase tracking-wider text-[#9CA3AF]">
             Summary
           </p>
-          <p className="text-[#0A0A0A]">{narrative}</p>
+          <p className="whitespace-pre-line text-[#0A0A0A]">{narrative}</p>
         </div>
       ) : null}
 
@@ -614,18 +615,39 @@ export function QuizFlow() {
     setRunErrors(result.errors);
 
     if (result.breakdowns.length >= 2 && result.winner) {
-      const rowsDescription = result.breakdowns
-        .map(
-          (r) =>
-            `${r.apartmentId}: total €${Math.round(r.totalEurosPerMonth)}, commute ${r.commuteDurationMinutes}m, QoL ${r.qualityOfLifeScoreOutOf100}`,
-        )
-        .join("\n");
-      const winnerHint = `Winner apartmentId=${result.winner.winnerApartmentId}; monthly diff vs runner-up €${result.winner.monthlyTotalDifferenceEuros}; priority=${quiz.priority}`;
-      const gem = await postGeminiComparisonSummary({
-        rowsDescription,
-        winnerHint,
-      });
-      if (gem.ok) setNarrative(gem.data.plainLanguageSummary);
+      const addressById = new Map(
+        entry.apartments.map((a) => [a.id, a.addressLine] as const),
+      );
+      const sorted = sortBreakdowns(result.breakdowns, quiz.priority);
+      const winnerRow = sorted[0];
+      const runnerRow = sorted[1];
+      if (winnerRow && runnerRow) {
+        const label = (id: string) =>
+          addressById.get(id)?.trim() || id.slice(0, 8);
+        const gemPayload: GeminiComparisonSummaryRequest = {
+          priority: quiz.priority,
+          apartments: sorted.map((r) => ({
+            addressLine: label(r.apartmentId),
+            rentEurosPerMonth: r.rentEurosPerMonth,
+            utilitiesEurosPerMonth: r.utilitiesEurosPerMonth,
+            commuteEurosPerMonth: r.commuteEurosPerMonth,
+            parkingEurosPerMonth: r.parkingEurosPerMonth,
+            totalEurosPerMonth: r.totalEurosPerMonth,
+            commuteDurationMinutes: r.commuteDurationMinutes,
+            qualityOfLifeScoreOutOf100: r.qualityOfLifeScoreOutOf100,
+          })),
+          winnerAddress: label(winnerRow.apartmentId),
+          runnerUpAddress: label(runnerRow.apartmentId),
+          monthlyTotalDifferenceEuros:
+            result.winner.monthlyTotalDifferenceEuros,
+          dailyCommuteMinutesSavedVersusRunnerUp:
+            result.winner.dailyCommuteMinutesSavedVersusRunnerUp,
+          qualityOfLifeScoreDifferenceVersusRunnerUp:
+            result.winner.qualityOfLifeScoreDifferenceVersusRunnerUp,
+        };
+        const gem = await postGeminiComparisonSummary(gemPayload);
+        if (gem.ok) setNarrative(gem.data.plainLanguageSummary);
+      }
     }
 
     setIsLoading(false);

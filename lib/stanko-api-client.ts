@@ -1,6 +1,7 @@
 import type {
   DirectionsCommuteMetrics,
   GeminiComparisonNarrative,
+  GeminiComparisonSummaryRequest,
   NeighborhoodPlaceCounts,
   ParkingZoneLookupResult,
   PlacesAutocompleteSuggestion,
@@ -98,10 +99,9 @@ export async function postPlacesAutocomplete(body: {
   }
 }
 
-export async function postGeminiComparisonSummary(body: {
-  rowsDescription: string;
-  winnerHint: string;
-}): Promise<Ok<GeminiComparisonNarrative> | Fail> {
+export async function postGeminiComparisonSummary(
+  body: GeminiComparisonSummaryRequest,
+): Promise<Ok<GeminiComparisonNarrative> | Fail> {
   try {
     const res = await fetch("/api/gemini-comparison-summary", {
       method: "POST",

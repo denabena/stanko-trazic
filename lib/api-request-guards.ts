@@ -1,4 +1,12 @@
-import type { TransitMode } from "@/lib/types";
+import type { TransitMode, UserPriority } from "@/lib/types";
+
+export function isUserPriority(value: unknown): value is UserPriority {
+  return (
+    value === "lowest_monthly_total" ||
+    value === "shortest_commute" ||
+    value === "best_neighborhood_quality"
+  );
+}
 
 export function isTransitMode(value: unknown): value is TransitMode {
   return (

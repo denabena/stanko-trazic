@@ -110,8 +110,8 @@ export const ZAGREB_SUBLOCALITY_TO_PARKING_ZONE: Readonly<
   "tresnjevka - jug": "2",
 };
 
-/** Gemini model id for REST generateContent */
-export const GEMINI_GENERATE_CONTENT_MODEL = "gemini-2.0-flash";
+/** Gemini model id for REST generateContent (AI Studio; avoid deprecated 2.0-flash for new keys) */
+export const GEMINI_GENERATE_CONTENT_MODEL = "gemini-2.5-flash";
 
 /** Gemini REST API base (v1beta) */
 export const GEMINI_REST_API_BASE =
