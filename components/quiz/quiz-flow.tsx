@@ -191,15 +191,6 @@ function ResultsPhase({
         </p>
       ) : null}
 
-      {narrative ? (
-        <div className="rounded border border-[#E5E7EB] bg-white p-4 text-sm leading-relaxed text-[#666666]">
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-[#9CA3AF]">
-            Summary
-          </p>
-          <p className="whitespace-pre-line text-[#0A0A0A]">{narrative}</p>
-        </div>
-      ) : null}
-
       <div className="mb-8 text-center">
         <motion.div
           initial={{ scale: 0 }}
@@ -371,21 +362,115 @@ function ResultsPhase({
               })}
             </div>
 
-            {winner && sortedRows.length >= 2 ? (
-              <p className="mt-4 text-center text-xs text-[#9CA3AF]">
-                Top pick beats the next option by about €
-                {Math.round(winner.monthlyTotalDifferenceEuros)}/mo on total
-                cost, saves ~{winner.dailyCommuteMinutesSavedVersusRunnerUp}{" "}
-                commute minutes per day, and +{winner.qualityOfLifeScoreDifferenceVersusRunnerUp}{" "}
-                QoL points vs runner-up (tie-break hints).
-              </p>
+            {narrative ? (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="mt-6 overflow-hidden rounded-lg border border-[#163D73]/15 bg-gradient-to-br from-[#163D73]/[0.04] to-transparent"
+              >
+                <div className="flex items-center gap-2 border-b border-[#163D73]/10 px-5 py-3">
+                  <Sparkles className="size-3.5 text-[#163D73]" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#163D73]">
+                    AI insight
+                  </span>
+                </div>
+                <div className="px-5 py-4 text-sm leading-relaxed text-[#0A0A0A]">
+                  {(() => {
+                    const lines = narrative.split("\n").filter((l) => l.trim());
+                    const bullets: string[] = [];
+                    const intro: string[] = [];
+                    for (const line of lines) {
+                      const m = line.match(/^\s*[-*•]\s+(.+)/);
+                      if (m) bullets.push(m[1]);
+                      else if (bullets.length === 0) intro.push(line.trim());
+                    }
+                    return (
+                      <>
+                        {intro.length > 0 && (
+                          <p className="mb-3">{intro.join(" ")}</p>
+                        )}
+                        {bullets.length > 0 && (
+                          <ul className="space-y-2.5">
+                            {bullets.map((b, i) => (
+                              <li key={i} className="flex gap-2.5">
+                                <span className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#163D73]/10 text-[10px] font-bold text-[#163D73]">
+                                  {i + 1}
+                                </span>
+                                <span>{b}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+                {winner && sortedRows.length >= 2 && (
+                  <div className="grid grid-cols-3 gap-px border-t border-[#163D73]/10 bg-[#163D73]/10">
+                    <div className="bg-white px-4 py-3 text-center">
+                      <div className="font-mono text-sm font-semibold text-[#163D73]">
+                        €{Math.round(winner.monthlyTotalDifferenceEuros)}
+                      </div>
+                      <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                        saved vs runner-up
+                      </div>
+                    </div>
+                    <div className="bg-white px-4 py-3 text-center">
+                      <div className="font-mono text-sm font-semibold text-[#163D73]">
+                        {winner.dailyCommuteMinutesSavedVersusRunnerUp} min
+                      </div>
+                      <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                        commute edge/day
+                      </div>
+                    </div>
+                    <div className="bg-white px-4 py-3 text-center">
+                      <div className="font-mono text-sm font-semibold text-[#163D73]">
+                        {winner.qualityOfLifeScoreDifferenceVersusRunnerUp > 0 ? "+" : ""}
+                        {winner.qualityOfLifeScoreDifferenceVersusRunnerUp}
+                      </div>
+                      <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                        QoL score edge
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            ) : winner && sortedRows.length >= 2 ? (
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <div className="rounded-lg border border-[#E5E7EB] px-4 py-3 text-center">
+                  <div className="font-mono text-sm font-semibold text-[#163D73]">
+                    €{Math.round(winner.monthlyTotalDifferenceEuros)}
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                    saved vs runner-up
+                  </div>
+                </div>
+                <div className="rounded-lg border border-[#E5E7EB] px-4 py-3 text-center">
+                  <div className="font-mono text-sm font-semibold text-[#163D73]">
+                    {winner.dailyCommuteMinutesSavedVersusRunnerUp} min
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                    commute edge/day
+                  </div>
+                </div>
+                <div className="rounded-lg border border-[#E5E7EB] px-4 py-3 text-center">
+                  <div className="font-mono text-sm font-semibold text-[#163D73]">
+                    {winner.qualityOfLifeScoreDifferenceVersusRunnerUp > 0 ? "+" : ""}
+                    {winner.qualityOfLifeScoreDifferenceVersusRunnerUp}
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-[#9CA3AF]">
+                    QoL score edge
+                  </div>
+                </div>
+              </div>
             ) : null}
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="flex gap-3 pt-4"
+              className="flex gap-3 pt-6"
             >
               <button
                 type="button"

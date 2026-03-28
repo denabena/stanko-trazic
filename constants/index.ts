@@ -13,7 +13,7 @@ export const ZAGREB_DEFAULT_UTILITIES_EUROS_PER_SQUARE_METER_MONTH = 0.85;
 export const NEIGHBORHOOD_QUALITY_SEARCH_RADIUS_METERS = 800;
 
 /** Max extra narrative length from Gemini (chars) */
-export const GEMINI_WINNER_SUMMARY_MAX_CHARS = 600;
+export const GEMINI_WINNER_SUMMARY_MAX_CHARS = 2000;
 
 /** localStorage key for cross-step wizard state */
 export const LOCAL_STORAGE_COMPARISON_SESSION_KEY = "stanko-trazic-comparison-session";
