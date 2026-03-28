@@ -69,7 +69,7 @@ export function ResultsPreview() {
         >
           <div className="mb-8 grid grid-cols-4 gap-6">
             <div className="text-xs tracking-wider text-[#9CA3AF] uppercase">
-              Cost Breakdown
+              Breakdown
             </div>
             {apartments.map((apt) => (
               <div key={apt.address}>

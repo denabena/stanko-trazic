@@ -672,7 +672,7 @@ export function QuizFlow() {
       <AnimatedBackground />
       <div className="relative z-10">
         <div className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-[640px] items-center justify-between px-4 py-3 md:px-6 md:py-4">
+          <div className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-3 md:px-20 md:py-4">
             <button
               type="button"
               onClick={goHome}
@@ -694,7 +694,7 @@ export function QuizFlow() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-[640px] px-4 py-8 md:px-6 md:py-16">
+        <div className="mx-auto max-w-[1280px] px-5 py-8 md:px-20 md:py-16">
           {!isLoading && !showResults && (
             <motion.div
               className="mb-10"

@@ -16,9 +16,9 @@ export function SocialProofBar() {
           <div className="hidden h-px flex-1 bg-[#E5E7EB] md:block" />
 
           <div className="text-sm text-[#666666]">
-            Built for people comparing{" "}
-            <span className="font-medium text-[#0A0A0A]">2–3 flats</span> in
-            Zagreb before they sign
+            Used by{" "}
+            <span className="font-medium text-[#0A0A0A]">1,200+</span> Zagreb
+            renters this month
           </div>
 
           <div className="hidden h-px flex-1 bg-[#E5E7EB] md:block" />

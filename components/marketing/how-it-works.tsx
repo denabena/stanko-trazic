@@ -7,21 +7,21 @@ export function HowItWorks() {
   const steps = [
     {
       icon: MessageSquare,
-      title: "Enter candidates & commute",
+      title: "Take a 2-minute quiz",
       description:
-        "Add 2–3 apartments (address, rent, size), your work or university place, then choose transit mode and what you want to optimize.",
+        "Tell us about your ideal flat size, budget, commute preferences, and which Zagreb flat locations you're considering.",
     },
     {
       icon: BarChart3,
-      title: "We pull real inputs",
+      title: "We crunch the numbers",
       description:
-        "Commute times and distances from Google Directions, nearby amenities from Places, and a parking zone hint—then we run the monthly cost model.",
+        "Our algorithm analyzes rent prices, utility estimates, parking costs, public transport, and commute times for each location.",
     },
     {
       icon: CheckCircle,
-      title: "See ranked results",
+      title: "Get your personalized report",
       description:
-        "Compare rent, utilities, commute, parking, and total monthly cost side by side, with an optional short summary of why the top pick wins.",
+        "See a clear side-by-side comparison of total monthly costs so you can make a confident decision about where to live.",
     },
   ];
 

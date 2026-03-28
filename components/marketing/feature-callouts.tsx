@@ -8,19 +8,19 @@ export function FeatureCallouts() {
       number: "01",
       title: "True cost breakdown",
       description:
-        "Not just rent. Utilities from size heuristics, commute from Directions, parking from zone lookup, plus a neighborhood amenity score.",
+        "Not just rent. We factor in utilities, parking, commute costs, and time, giving you the full monthly picture.",
     },
     {
       number: "02",
-      title: "Commute-aware ranking",
+      title: "Commute calculator",
       description:
-        "Pick car, tram/bus, Zagreb bike, or walking—costs and times follow your mode, then we rank by your stated priority.",
+        "See how your workplace location impacts daily travel time and costs across locations.",
     },
     {
       number: "03",
-      title: "Zagreb-first flow",
+      title: "Neighborhood index",
       description:
-        "Autocomplete and searches are biased to Croatia so addresses and nearby results stay relevant to renters in the city.",
+        "Compare flats across all major districts with real-time pricing data and cost-of-living adjustments.",
     },
   ];
 

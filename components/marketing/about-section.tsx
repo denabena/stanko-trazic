@@ -19,14 +19,15 @@ export function AboutSection() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-center text-lg leading-relaxed text-[#666666]">
-              Stanko Tražić estimates the{" "}
+              Stanko Tražić helps renters make informed decisions by calculating
+              the{" "}
               <strong className="font-medium text-[#0A0A0A]">
-                real monthly cost
+                true monthly cost of living
               </strong>{" "}
-              of a few candidate apartments in Zagreb: rent, utilities from
-              square meters, commute from your mode and destination, parking
-              where we can resolve a zone, and a simple neighborhood quality
-              score from nearby amenities.
+              in different Zagreb neighborhoods. We go beyond just rent to
+              include utilities, parking, commute costs, and time, giving you a
+              complete picture of what your flat will actually cost you each
+              month.
             </p>
 
             <div className="grid gap-8 pt-8 md:grid-cols-2">
@@ -35,10 +36,10 @@ export function AboutSection() {
                   Why we built this
                 </h3>
                 <p className="text-sm leading-relaxed text-[#666666]">
-                  Rent listings rarely show the full picture. Commute passes,
-                  parking, and what is walkable nearby change what you actually
-                  spend and how it feels to live there—so we put those pieces in
-                  one comparison.
+                  Finding a flat in Zagreb is hard enough. Understanding the true
+                  cost shouldn't be. We created this tool to help renters compare
+                  neighborhoods based on all the factors that impact monthly
+                  expenses.
                 </p>
               </div>
 
@@ -47,10 +48,7 @@ export function AboutSection() {
                   How it helps
                 </h3>
                 <p className="text-sm leading-relaxed text-[#666666]">
-                  You keep the same layout of questions the product uses
-                  internally: apartment candidates, a work or university
-                  destination, transit mode, and whether you care most about
-                  total cost, commute time, or neighborhood quality.
+                Our comprehensive calculator factors in monthly rent, estimated utilities, parking costs, public transport passes and commute time to give you a truly accurate comparison across various Zagreb flat locations.
                 </p>
               </div>
             </div>
