@@ -787,7 +787,7 @@ export function QuizFlow() {
                             htmlFor={`apt-addr-${apt.id}`}
                             className="mb-1.5 block text-xs text-[#666666]"
                           >
-                            addressLine
+                            Street address
                           </label>
                           <AddressAutocompleteInput
                             id={`apt-addr-${apt.id}`}
@@ -806,8 +806,8 @@ export function QuizFlow() {
                               htmlFor={`apt-rent-${apt.id}`}
                               className="mb-1.5 block text-xs text-[#666666]"
                             >
-                              rentEurosPerMonth{" "}
-                              <span className="text-[#9CA3AF]">(EUR/mo)</span>
+                              Monthly rent{" "}
+                              <span className="text-[#9CA3AF]">(€/mo)</span>
                             </label>
                             <div className="relative">
                               <span className="absolute top-1/2 left-3 -translate-y-1/2 text-sm text-[#9CA3AF]">
@@ -836,7 +836,7 @@ export function QuizFlow() {
                               htmlFor={`apt-sqm-${apt.id}`}
                               className="mb-1.5 block text-xs text-[#666666]"
                             >
-                              squareMeters{" "}
+                              Size{" "}
                               <span className="text-[#9CA3AF]">(m²)</span>
                             </label>
                             <div className="relative">
@@ -886,7 +886,7 @@ export function QuizFlow() {
                           className="text-sm text-[#0A0A0A]"
                           style={{ fontWeight: 600 }}
                         >
-                          WorkOrUniversityDestination
+                          Work or university
                         </span>
                       </div>
 
@@ -896,7 +896,7 @@ export function QuizFlow() {
                             htmlFor="dest-label"
                             className="mb-1.5 block text-xs text-[#666666]"
                           >
-                            label
+                            Name
                           </label>
                           <input
                             id="dest-label"
@@ -920,7 +920,7 @@ export function QuizFlow() {
                             htmlFor="dest-place"
                             className="mb-1.5 block text-xs text-[#666666]"
                           >
-                            placeIdOrAddress
+                            Address or place
                           </label>
                           <AddressAutocompleteInput
                             id="dest-place"
@@ -965,7 +965,7 @@ export function QuizFlow() {
                         className="mb-3 block text-sm text-[#0A0A0A]"
                         style={{ fontWeight: 500 }}
                       >
-                        transitMode
+                        How will you commute?
                       </label>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {transitOptions.map((opt) => (
@@ -1006,7 +1006,7 @@ export function QuizFlow() {
                         className="mb-3 block text-sm text-[#0A0A0A]"
                         style={{ fontWeight: 500 }}
                       >
-                        priority
+                        What matters most?
                       </label>
                       <div className="space-y-2">
                         {priorityOptions.map((opt) => (
