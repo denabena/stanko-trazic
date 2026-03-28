@@ -1,1 +1,105 @@
-// TODO
+import { GOOGLE_DIRECTIONS_JSON_BASE } from "@/constants/index";
+import type {
+  DirectionsCommuteMetrics,
+  DirectionsRouteLeg,
+  TransitMode,
+} from "@/lib/types";
+
+export function transitModeToGoogleDirectionsMode(
+  mode: TransitMode,
+): "driving" | "walking" | "bicycling" | "transit" {
+  switch (mode) {
+    case "car":
+      return "driving";
+    case "tram_bus":
+      return "transit";
+    case "zagreb_bike":
+      return "bicycling";
+    case "walk":
+      return "walking";
+  }
+}
+
+function mapDirectionsPayloadToMetrics(
+  data: unknown,
+): DirectionsCommuteMetrics | null {
+  if (typeof data !== "object" || data === null) {
+    return null;
+  }
+  const status = (data as { status?: unknown }).status;
+  if (status !== "OK") {
+    return null;
+  }
+  const routes = (data as { routes?: unknown }).routes;
+  if (!Array.isArray(routes) || routes.length === 0) {
+    return null;
+  }
+  const first = routes[0];
+  if (typeof first !== "object" || first === null) {
+    return null;
+  }
+  const legsRaw = (first as { legs?: unknown }).legs;
+  if (!Array.isArray(legsRaw)) {
+    return null;
+  }
+  const legs: DirectionsRouteLeg[] = [];
+  let durationSeconds = 0;
+  let distanceMeters = 0;
+  for (const leg of legsRaw) {
+    if (typeof leg !== "object" || leg === null) {
+      continue;
+    }
+    const durationValue = (leg as { duration?: { value?: unknown } }).duration
+      ?.value;
+    const distanceValue = (leg as { distance?: { value?: unknown } }).distance
+      ?.value;
+    if (typeof durationValue !== "number" || typeof distanceValue !== "number") {
+      continue;
+    }
+    legs.push({
+      durationSeconds: durationValue,
+      distanceMeters: distanceValue,
+    });
+    durationSeconds += durationValue;
+    distanceMeters += distanceValue;
+  }
+  if (legs.length === 0) {
+    return null;
+  }
+  return { durationSeconds, distanceMeters, legs };
+}
+
+export async function requestDirectionsCommuteMetrics(
+  originAddress: string,
+  destinationPlaceIdOrAddress: string,
+  transitMode: TransitMode,
+): Promise<DirectionsCommuteMetrics | null> {
+  try {
+    const apiKey = process.env.GOOGLE_MAPS_DIRECTIONS_API_KEY;
+    const origin = originAddress.trim();
+    const destination = destinationPlaceIdOrAddress.trim();
+    if (!apiKey || origin.length === 0 || destination.length === 0) {
+      return null;
+    }
+    const mode = transitModeToGoogleDirectionsMode(transitMode);
+    const params = new URLSearchParams({
+      origin,
+      destination,
+      mode,
+      key: apiKey,
+    });
+    if (mode === "transit") {
+      params.set("departure_time", String(Math.floor(Date.now() / 1000)));
+    }
+    const url = `${GOOGLE_DIRECTIONS_JSON_BASE}?${params.toString()}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return null;
+    }
+    const payload: unknown = await response.json();
+    return mapDirectionsPayloadToMetrics(payload);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

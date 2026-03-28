@@ -40,6 +40,35 @@ export interface DirectionsRouteLeg {
   distanceMeters: number;
 }
 
+/** Person B → Person C: raw route metrics from Directions (no €). */
+export interface DirectionsCommuteMetrics {
+  durationSeconds: number;
+  distanceMeters: number;
+  legs: DirectionsRouteLeg[];
+}
+
+/** Person B → Person C: raw nearby counts from Places (no score). */
+export interface NeighborhoodPlaceCounts {
+  shops: number;
+  parks: number;
+  pharmacies: number;
+  cafes: number;
+}
+
+/** Person B → Person C: parking zone hint (€ from constants / calculators). */
+export interface ParkingZoneLookupResult {
+  zoneCode: string | null;
+}
+
+/** Person B: one row from Places Autocomplete (New), for address pickers. */
+export interface PlacesAutocompleteSuggestion {
+  placeId: string;
+  /** Full line from Google (good fallback for Directions / display). */
+  description: string;
+  mainText: string;
+  secondaryText: string;
+}
+
 /** Mapped commute result — not raw Google Directions JSON */
 export interface CommuteCostEstimate {
   monthlyEuros: number;
