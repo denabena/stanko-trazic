@@ -22,14 +22,12 @@ export function Hero({ onStartQuiz }: { onStartQuiz: () => void }) {
             >
               Find out what
               <br />
-              your flat will
+              your next flat
               <br />
-              <span className="text-[#163D73]">actually</span> cost you.
+              will <span className="text-[#163D73]">actually</span> cost you.
             </h1>
             <p className="mx-auto mb-6 max-w-[480px] text-center text-base leading-relaxed text-[#666666] md:mb-8 md:text-lg lg:mx-0 lg:text-left">
-              Enter two or three candidate apartments, your workplace, and how
-              you commute. We combine rent, utilities, commute, parking, and a
-              neighborhood quality score for Zagreb.
+            Answer a few quick questions to receive a detailed estimate of rent, commute times, parking availability, and hidden costs for every neighborhood in Zagreb.
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4 lg:items-start">
               <motion.button
