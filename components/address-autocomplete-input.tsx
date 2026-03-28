@@ -43,6 +43,7 @@ export function AddressAutocompleteInput({
   );
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const userTypedRef = useRef(false);
 
   const fetchSuggestions = useCallback(
     async (input: string) => {
@@ -70,6 +71,7 @@ export function AddressAutocompleteInput({
   );
 
   useEffect(() => {
+    if (!userTypedRef.current) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       void fetchSuggestions(value);
@@ -103,6 +105,7 @@ export function AddressAutocompleteInput({
         placeholder={placeholder}
         value={value}
         onChange={(e) => {
+          userTypedRef.current = true;
           onChange(e.target.value);
           setOpen(false);
         }}
