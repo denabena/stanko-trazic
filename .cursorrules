@@ -1,0 +1,19 @@
+## Naming
+- Variables and functions: camelCase
+- Components: PascalCase
+- Files: kebab-case
+- Constants: SCREAMING_SNAKE_CASE
+- Types: PascalCase, no I prefix
+- Booleans: prefix is, has, can
+- Event handlers: prefix handle
+- Async functions: name what they return, not that it fetches
+
+## Rules
+- No hardcoded values anywhere — all magic values go in /constants/index.ts
+- No any in TypeScript. No @ts-ignore. No as SomeType unless unavoidable.
+- All shared types in /lib/types.ts only.
+- Tailwind only — no custom CSS, no inline style={{}}. Semantic color tokens only, no hex.
+- No console.log — console.error inside catch blocks only.
+- No API keys in code — process.env only.
+- No function longer than ~40 lines — split it.
+- No logic duplication — extract to /lib.

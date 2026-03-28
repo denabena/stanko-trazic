@@ -1,0 +1,13 @@
+---
+globs: components/**/*.tsx
+---
+- One component per file, named export only (no default exports).
+- Props interface defined in the component file itself.
+- No fetch, no SDK calls, no business logic inside components.
+- No useEffect for data fetching — data arrives via props from the parent page.
+- If file exceeds ~150 lines, split it.
+- Structure order: imports → props interface → hooks → derived values → handlers → return.
+- Mobile first: base styles → md: → lg:
+- No fixed widths. Use w-full, max-w-*, flex, grid.
+- Always handle loading, error, and empty states explicitly.
+- Use shadcn/ui as base — do not rebuild what it already provides.

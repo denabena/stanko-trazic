@@ -1,0 +1,10 @@
+---
+globs: lib/**/*.ts
+---
+- Pure functions only — same input, same output, no side effects.
+- No React, no UI logic inside lib files.
+- All shared types live in lib/types.ts only — no logic there.
+- One file per external service.
+- Calculation files must not call APIs — they receive data as parameters.
+- Every function: explicitly typed params and return, wrapped in try/catch, returns null on failure (never throws).
+- API wrappers: never expose raw API response shapes, always map to your own types, return Promise<YourType | null>.

@@ -1,0 +1,10 @@
+---
+globs: app/**/*.tsx, app/**/*.ts
+---
+- Pages own state and orchestrate data flow — no logic, no direct API calls.
+- Call lib functions only — never fetch directly inside a page.
+- Delegate rendering to components. If JSX exceeds ~30 lines, extract a component.
+- Always wrap page content in: <main className="min-h-screen w-full max-w-4xl mx-auto px-4 py-8">
+- State pattern: useState for data, isLoading, error. Handle all three in render.
+- Pass state between pages via localStorage. Always validate on arrival, redirect to / if missing.
+- API routes: one route per concern, validate input first, return { data: T } or { error: string }.
