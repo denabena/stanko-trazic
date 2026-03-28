@@ -1,4 +1,8 @@
-import { GOOGLE_DIRECTIONS_JSON_BASE } from "@/constants/index";
+import {
+  DIRECTIONS_FALLBACK_ONE_WAY_DISTANCE_METERS,
+  DIRECTIONS_FALLBACK_ONE_WAY_DURATION_SECONDS,
+  GOOGLE_DIRECTIONS_JSON_BASE,
+} from "@/constants/index";
 import type {
   DirectionsCommuteMetrics,
   DirectionsRouteLeg,
@@ -92,6 +96,47 @@ export function formatDirectionsQueryLocation(value: string): string {
   return t;
 }
 
+type GoogleDirectionsTravelMode =
+  | "driving"
+  | "walking"
+  | "bicycling"
+  | "transit";
+
+export function buildFallbackDirectionsCommuteMetrics(): DirectionsCommuteMetrics {
+  const durationSeconds = DIRECTIONS_FALLBACK_ONE_WAY_DURATION_SECONDS;
+  const distanceMeters = DIRECTIONS_FALLBACK_ONE_WAY_DISTANCE_METERS;
+  const leg: DirectionsRouteLeg = { durationSeconds, distanceMeters };
+  return {
+    durationSeconds,
+    distanceMeters,
+    legs: [leg],
+  };
+}
+
+async function fetchDirectionsCommuteMetricsForMode(
+  origin: string,
+  destination: string,
+  mode: GoogleDirectionsTravelMode,
+  apiKey: string,
+): Promise<DirectionsCommuteMetrics | null> {
+  const params = new URLSearchParams({
+    origin,
+    destination,
+    mode,
+    key: apiKey,
+  });
+  if (mode === "transit") {
+    params.set("departure_time", String(Math.floor(Date.now() / 1000)));
+  }
+  const url = `${GOOGLE_DIRECTIONS_JSON_BASE}?${params.toString()}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    return null;
+  }
+  const payload: unknown = await response.json();
+  return mapDirectionsPayloadToMetrics(payload);
+}
+
 export async function requestDirectionsCommuteMetrics(
   originAddress: string,
   destinationPlaceIdOrAddress: string,
@@ -106,25 +151,39 @@ export async function requestDirectionsCommuteMetrics(
     if (!apiKey || origin.length === 0 || destination.length === 0) {
       return null;
     }
-    const mode = transitModeToGoogleDirectionsMode(transitMode);
-    const params = new URLSearchParams({
+
+    const primaryMode = transitModeToGoogleDirectionsMode(transitMode);
+    let metrics = await fetchDirectionsCommuteMetricsForMode(
       origin,
       destination,
-      mode,
-      key: apiKey,
-    });
-    if (mode === "transit") {
-      params.set("departure_time", String(Math.floor(Date.now() / 1000)));
+      primaryMode,
+      apiKey,
+    );
+
+    if (metrics === null && transitMode === "zagreb_bike") {
+      metrics = await fetchDirectionsCommuteMetricsForMode(
+        origin,
+        destination,
+        "walking",
+        apiKey,
+      );
     }
-    const url = `${GOOGLE_DIRECTIONS_JSON_BASE}?${params.toString()}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      return null;
+
+    if (metrics === null) {
+      console.warn(
+        "[directions] using synthetic fallback (no OK route or HTTP error)",
+        {
+          transitMode,
+          triedBikeThenWalk: transitMode === "zagreb_bike",
+        },
+      );
+      return buildFallbackDirectionsCommuteMetrics();
     }
-    const payload: unknown = await response.json();
-    return mapDirectionsPayloadToMetrics(payload);
+
+    return metrics;
   } catch (error) {
     console.error(error);
-    return null;
+    console.warn("[directions] using synthetic fallback after exception");
+    return buildFallbackDirectionsCommuteMetrics();
   }
 }

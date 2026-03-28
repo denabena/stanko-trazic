@@ -30,6 +30,13 @@ export const ZAGREB_BIKE_MONTHLY_EQUIVALENT_EUROS = 5;
 /** Default fuel cost per km when driving (€) — zone/refinement later */
 export const DEFAULT_FUEL_COST_EUROS_PER_KM = 0.12;
 
+/**
+ * When Directions returns no route (e.g. bicycling unsupported) or fails,
+ * use this single-leg surrogate so comparisons still complete. ~24 min / 4.2 km one-way.
+ */
+export const DIRECTIONS_FALLBACK_ONE_WAY_DURATION_SECONDS = 24 * 60;
+export const DIRECTIONS_FALLBACK_ONE_WAY_DISTANCE_METERS = 4200;
+
 /** Google Directions API (legacy JSON) */
 export const GOOGLE_DIRECTIONS_JSON_BASE =
   "https://maps.googleapis.com/maps/api/directions/json";
