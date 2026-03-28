@@ -1,7 +1,5 @@
-// TODO
+import { MarketingPage } from "@/components/marketing/marketing-page";
 
-export default function ApartmentEntryPage() {
-  return (
-    <main className="min-h-screen w-full max-w-4xl mx-auto px-4 py-8" />
-  );
+export default function HomePage() {
+  return <MarketingPage />;
 }
