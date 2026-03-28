@@ -16,7 +16,6 @@ import {
   ZAGREB_AUTOCOMPLETE_BIAS_RADIUS_METERS,
   ZAGREB_AUTOCOMPLETE_CENTER_LATITUDE,
   ZAGREB_AUTOCOMPLETE_CENTER_LONGITUDE,
-  ZAGREB_SUBLOCALITY_TO_PARKING_ZONE,
 } from "@/constants/index";
 import type {
   NeighborhoodPlaceCounts,
@@ -82,24 +81,6 @@ export async function geocodeAddressToLatLng(
     console.error(error);
     return null;
   }
-}
-
-async function reverseGeocodePayload(
-  lat: number,
-  lng: number,
-  apiKey: string,
-): Promise<unknown | null> {
-  const params = new URLSearchParams({
-    latlng: `${lat},${lng}`,
-    key: apiKey,
-    language: "en",
-  });
-  const url = `${GOOGLE_GEOCODE_JSON_BASE}?${params.toString()}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    return null;
-  }
-  return response.json();
 }
 
 function countPlacesInNearbyResponse(data: unknown): number {
@@ -196,75 +177,6 @@ export async function requestNeighborhoodPlaceCounts(params: {
       return null;
     }
     return { shops, parks, pharmacies, cafes };
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-function resolveZoneFromGeocodeResult(data: unknown): string | null {
-  if (typeof data !== "object" || data === null) {
-    return null;
-  }
-  if ((data as { status?: unknown }).status !== "OK") {
-    return null;
-  }
-  const results = (data as { results?: unknown }).results;
-  if (!Array.isArray(results) || results.length === 0) {
-    return null;
-  }
-  const first = results[0];
-  if (typeof first !== "object" || first === null) {
-    return null;
-  }
-  const components = (first as { address_components?: unknown })
-    .address_components;
-  if (!Array.isArray(components)) {
-    return null;
-  }
-  for (const component of components) {
-    if (typeof component !== "object" || component === null) {
-      continue;
-    }
-    const types = (component as { types?: unknown }).types;
-    const longName = (component as { long_name?: unknown }).long_name;
-    if (!Array.isArray(types) || typeof longName !== "string") {
-      continue;
-    }
-    const isArea = types.some(
-      (t) =>
-        t === "neighborhood" ||
-        t === "sublocality" ||
-        t === "sublocality_level_1",
-    );
-    if (!isArea) {
-      continue;
-    }
-    const key = longName.trim().toLowerCase();
-    const zone = ZAGREB_SUBLOCALITY_TO_PARKING_ZONE[key];
-    if (typeof zone === "string" && zone.length > 0) {
-      return zone;
-    }
-  }
-  return null;
-}
-
-export async function requestParkingZoneLookup(params: {
-  latitude: number;
-  longitude: number;
-  apiKey: string;
-}): Promise<ParkingZoneLookupResult | null> {
-  try {
-    const payload = await reverseGeocodePayload(
-      params.latitude,
-      params.longitude,
-      params.apiKey,
-    );
-    if (payload === null) {
-      return null;
-    }
-    const zoneCode = resolveZoneFromGeocodeResult(payload);
-    return { zoneCode };
   } catch (error) {
     console.error(error);
     return null;

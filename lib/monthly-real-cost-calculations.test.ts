@@ -64,13 +64,28 @@ describe("calculateUtilitiesEstimate", () => {
 describe("calculateParkingCost", () => {
   it("zone 1 for car", () => {
     const result = calculateParkingCost({ zoneCode: "1" }, "car");
-    expect(result?.monthlyEuros).toBe(66);
+    expect(result?.monthlyEuros).toBe(1051.2);
     expect(result?.zoneCode).toBe("1");
+  });
+
+  it("zone 2 for car", () => {
+    const result = calculateParkingCost({ zoneCode: "2" }, "car");
+    expect(result?.monthlyEuros).toBe(47.8);
   });
 
   it("zone 3 for car", () => {
     const result = calculateParkingCost({ zoneCode: "3" }, "car");
-    expect(result?.monthlyEuros).toBe(26);
+    expect(result?.monthlyEuros).toBe(17);
+  });
+
+  it("zone 4.1 for car", () => {
+    const result = calculateParkingCost({ zoneCode: "4.1" }, "car");
+    expect(result?.monthlyEuros).toBe(13.3);
+  });
+
+  it("zone 4.2 for car", () => {
+    const result = calculateParkingCost({ zoneCode: "4.2" }, "car");
+    expect(result?.monthlyEuros).toBe(26.5);
   });
 
   it("unknown zone for car falls back to 0", () => {
@@ -139,16 +154,16 @@ describe("calculateMonthlyRealCostBreakdown", () => {
       { id: "apt-1", addressLine: "Ilica 1", rentEurosPerMonth: 500, squareMeters: 60 },
       { monthlyEuros: 52.8, durationMinutes: 30, legs: singleLeg(1800, 10_000) },
       { monthlyEuros: 42.5, appliedRateEurosPerSquareMeter: 0.85 },
-      { zoneCode: "1", monthlyEuros: 66 },
+      { zoneCode: "2", monthlyEuros: 47.8 },
       { scoreOutOf100: 72, shopsWithinRadius: 5, parksWithinRadius: 3, pharmaciesWithinRadius: 2, cafesWithinRadius: 8 },
     );
 
     expect(result?.apartmentId).toBe("apt-1");
-    expect(result?.totalEurosPerMonth).toBe(661.3);
+    expect(result?.totalEurosPerMonth).toBe(643.1);
     expect(result?.rentEurosPerMonth).toBe(500);
     expect(result?.utilitiesEurosPerMonth).toBe(42.5);
     expect(result?.commuteEurosPerMonth).toBe(52.8);
-    expect(result?.parkingEurosPerMonth).toBe(66);
+    expect(result?.parkingEurosPerMonth).toBe(47.8);
     expect(result?.commuteDurationMinutes).toBe(30);
     expect(result?.qualityOfLifeScoreOutOf100).toBe(72);
   });
