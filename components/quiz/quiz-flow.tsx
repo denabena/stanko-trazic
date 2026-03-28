@@ -5,7 +5,11 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpLeft,
+  Bike,
+  Bus,
+  Car,
   CheckCircle,
+  Footprints,
   Plus,
   Sparkles,
   Trash2,
@@ -66,11 +70,16 @@ const emptyApartment = (): DraftApartment => ({
   squareMeters: "",
 });
 
-const transitOptions: { value: TransitMode; label: string; icon: string }[] = [
-  { value: "car", label: "Car", icon: "🚗" },
-  { value: "tram_bus", label: "Tram / Bus", icon: "🚌" },
-  { value: "zagreb_bike", label: "Zagreb Bajs", icon: "🚲" },
-  { value: "walk", label: "Walking", icon: "🚶" },
+const transitOptions: {
+  value: TransitMode;
+  label: string;
+  sub: string;
+  Icon: typeof Car;
+}[] = [
+  { value: "car", label: "Car", sub: "Drive & park", Icon: Car },
+  { value: "tram_bus", label: "Tram / Bus", sub: "Public transit", Icon: Bus },
+  { value: "zagreb_bike", label: "Zagreb Bajs", sub: "City bike share", Icon: Bike },
+  { value: "walk", label: "Walking", sub: "On foot", Icon: Footprints },
 ];
 
 const priorityOptions: {
@@ -1081,41 +1090,57 @@ export function QuizFlow() {
                         How will you commute?
                       </label>
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        {transitOptions.map((opt, i) => (
-                          <motion.button
-                            key={opt.value}
-                            type="button"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.06 }}
-                            onClick={() =>
-                              setAnswers((prev) => ({
-                                ...prev,
-                                transitMode: opt.value,
-                              }))
-                            }
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.97 }}
-                            className={`flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 px-3 py-5 text-center shadow-sm transition-all sm:py-6 ${
-                              answers.transitMode === opt.value
-                                ? "border-[#163D73] bg-[#163D73]/[0.06] text-[#0A0A0A] shadow-[#163D73]/10"
-                                : "border-[#E5E7EB] bg-white text-[#666666] hover:border-[#D1D5DB] hover:shadow-md"
-                            }`}
-                          >
-                            <span className="text-2xl sm:text-3xl">
-                              {opt.icon}
-                            </span>
-                            <span
-                              className="text-xs"
-                              style={{ fontWeight: 500 }}
+                        {transitOptions.map((opt, i) => {
+                          const selected = answers.transitMode === opt.value;
+                          return (
+                            <motion.button
+                              key={opt.value}
+                              type="button"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: i * 0.06 }}
+                              onClick={() =>
+                                setAnswers((prev) => ({
+                                  ...prev,
+                                  transitMode: opt.value,
+                                }))
+                              }
+                              whileHover={{ y: -3, scale: 1.02 }}
+                              whileTap={{ scale: 0.96 }}
+                              className={`relative flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 px-3 py-6 text-center transition-all sm:py-7 ${
+                                selected
+                                  ? "border-[#163D73] bg-[#163D73]/[0.06] shadow-md shadow-[#163D73]/10"
+                                  : "border-[#E5E7EB] bg-white hover:border-[#C7CED8] hover:shadow-md"
+                              }`}
                             >
-                              {opt.label}
-                            </span>
-                            {answers.transitMode === opt.value && (
-                              <CheckCircle className="size-4 text-[#163D73]" />
-                            )}
-                          </motion.button>
-                        ))}
+                              {selected && (
+                                <span className="absolute top-2.5 right-2.5">
+                                  <CheckCircle className="size-4 text-[#163D73]" />
+                                </span>
+                              )}
+                              <span
+                                className={`flex size-11 items-center justify-center rounded-full transition-colors ${
+                                  selected
+                                    ? "bg-[#163D73] text-white"
+                                    : "bg-[#F3F4F6] text-[#666666]"
+                                }`}
+                              >
+                                <opt.Icon className="size-5" strokeWidth={1.8} />
+                              </span>
+                              <div>
+                                <span
+                                  className={`block text-sm ${selected ? "text-[#0A0A0A]" : "text-[#0A0A0A]"}`}
+                                  style={{ fontWeight: 600 }}
+                                >
+                                  {opt.label}
+                                </span>
+                                <span className="mt-0.5 block text-[11px] text-[#9CA3AF]">
+                                  {opt.sub}
+                                </span>
+                              </div>
+                            </motion.button>
+                          );
+                        })}
                       </div>
                     </div>
 
