@@ -6,7 +6,6 @@ import {
   ArrowRight,
   ArrowUpLeft,
   CheckCircle,
-  Navigation,
   Plus,
   Sparkles,
   Trash2,
@@ -115,7 +114,7 @@ function sortBreakdowns(
 function LoadingPhase({ message }: { message: string }) {
   return (
     <motion.div
-      className="flex flex-col items-center justify-center gap-8 py-24"
+      className="flex min-h-[60vh] flex-col items-center justify-center gap-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -300,14 +299,14 @@ function ResultsPhase({
               <button
                 type="button"
                 onClick={() => setShowBreakdown(false)}
-                className="flex-1 rounded border border-[#D1D5DB] px-6 py-3.5 font-medium text-[#0A0A0A] transition-colors hover:border-[#9CA3AF]"
+                className="flex-1 cursor-pointer rounded border border-[#D1D5DB] px-6 py-3.5 font-medium text-[#0A0A0A] transition-colors hover:border-[#9CA3AF]"
               >
                 Back to results
               </button>
               <button
                 type="button"
                 onClick={onDone}
-                className="rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682]"
+                className="cursor-pointer rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682]"
               >
                 Back to home
               </button>
@@ -390,14 +389,14 @@ function ResultsPhase({
               <button
                 type="button"
                 onClick={() => setShowBreakdown(true)}
-                className="flex-1 rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682]"
+                className="flex-1 cursor-pointer rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682]"
               >
                 View full breakdown
               </button>
               <button
                 type="button"
                 onClick={onDone}
-                className="rounded border border-[#D1D5DB] px-6 py-3.5 font-medium text-[#666666] transition-colors hover:border-[#9CA3AF]"
+                className="cursor-pointer rounded border border-[#D1D5DB] px-6 py-3.5 font-medium text-[#666666] transition-colors hover:border-[#9CA3AF]"
               >
                 Back to home
               </button>
@@ -637,6 +636,7 @@ export function QuizFlow() {
     if (step < TOTAL_STEPS - 1) {
       setDirection(1);
       setStep((s) => s + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       void runComparison();
     }
@@ -644,6 +644,7 @@ export function QuizFlow() {
 
   const prev = () => {
     if (step > 0) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       setDirection(-1);
       setStep((s) => s - 1);
     }
@@ -661,16 +662,16 @@ export function QuizFlow() {
   }, [comparisonEntry]);
 
   const stepTitles = [
-    "Enter your apartment candidates",
-    "Transit mode & priority",
+    "Which apartments are you eyeing?",
+    "How do you get around?",
   ];
   const stepSubtitles = [
-    "Add 2–3 apartments you are comparing, plus your workplace or university",
-    "How you will commute and what matters most in the ranking",
+    "Add the places you're deciding between — we'll do the math on all the hidden costs.",
+    "Pick your daily commute style and tell us what matters most to you.",
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#FAFAFA]">
+    <div className="relative min-h-screen bg-white">
       <AnimatedBackground />
       <div className="relative z-10">
         <div className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white/80 backdrop-blur-md">
@@ -678,7 +679,7 @@ export function QuizFlow() {
             <button
               type="button"
               onClick={goHome}
-              className="flex items-center gap-1.5 text-xs text-[#666666] transition-colors hover:text-[#0A0A0A] md:gap-2 md:text-sm"
+              className="flex cursor-pointer items-center gap-1.5 text-xs text-[#666666] transition-colors hover:text-[#0A0A0A] md:gap-2 md:text-sm"
             >
               <ArrowUpLeft className="size-4" />
               <span className="hidden sm:inline">Back to home</span>
@@ -711,9 +712,9 @@ export function QuizFlow() {
                   {Math.round(((step + 1) / TOTAL_STEPS) * 100)}%
                 </span>
               </div>
-              <div className="h-1 overflow-hidden rounded-full bg-[#E5E7EB]">
+              <div className="h-1.5 overflow-hidden rounded-full bg-[#E5E7EB]">
                 <motion.div
-                  className="h-full rounded-full bg-[#163D73]"
+                  className="h-full rounded-full bg-gradient-to-r from-[#163D73] to-[#2563A8]"
                   animate={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 />
@@ -761,9 +762,12 @@ export function QuizFlow() {
                 {step === 0 && (
                   <div className="space-y-6">
                     {answers.apartments.map((apt, i) => (
-                      <div
+                      <motion.div
                         key={apt.id}
-                        className="space-y-4 rounded border border-[#E5E7EB] bg-white p-5 md:p-6"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.08 }}
+                        className="space-y-4 overflow-hidden rounded-lg border border-[#E5E7EB] border-l-[3px] border-l-[#163D73] bg-white p-5 shadow-sm md:p-6"
                       >
                         <div className="flex items-center justify-between">
                           <span
@@ -865,30 +869,27 @@ export function QuizFlow() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
 
                     {answers.apartments.length < MAX_APARTMENT_CANDIDATES && (
                       <button
                         type="button"
                         onClick={addApartment}
-                        className="flex w-full items-center justify-center gap-2 rounded border border-dashed border-[#D1D5DB] py-3.5 text-sm text-[#666666] transition-colors hover:border-[#163D73] hover:text-[#163D73]"
+                        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[#D1D5DB] py-4 text-sm text-[#666666] transition-all hover:border-[#163D73] hover:bg-[#163D73]/[0.02] hover:text-[#163D73]"
                       >
                         <Plus className="size-4" />
                         Add a 3rd apartment
                       </button>
                     )}
 
-                    <div className="border-t border-[#E5E7EB] pt-6">
-                      <div className="mb-5 flex items-center gap-2">
-                        <div className="flex size-7 items-center justify-center rounded bg-[#163D73]/10">
-                          <Navigation className="size-3.5 text-[#163D73]" />
-                        </div>
+                    <div className="mt-2 rounded-lg border border-[#E5E7EB] bg-white p-5 shadow-sm md:p-6">
+                      <div className="mb-5">
                         <span
                           className="text-sm text-[#0A0A0A]"
                           style={{ fontWeight: 600 }}
                         >
-                          Work or university
+                          Where do you work or study?
                         </span>
                       </div>
 
@@ -964,81 +965,90 @@ export function QuizFlow() {
                 )}
 
                 {step === 1 && (
-                  <div className="space-y-8">
-                    <div>
+                  <div className="space-y-10">
+                    <div id="transit-mode-group">
                       <label
-                        className="mb-3 block text-sm text-[#0A0A0A]"
+                        className="mb-4 block text-sm text-[#0A0A0A]"
                         style={{ fontWeight: 500 }}
                       >
                         How will you commute?
                       </label>
-                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        {transitOptions.map((opt) => (
-                          <button
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                        {transitOptions.map((opt, i) => (
+                          <motion.button
                             key={opt.value}
                             type="button"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.06 }}
                             onClick={() =>
                               setAnswers((prev) => ({
                                 ...prev,
                                 transitMode: opt.value,
                               }))
                             }
-                            className={`flex flex-col items-center gap-1.5 rounded border px-3 py-4 text-center transition-all sm:gap-2 sm:py-5 ${
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.97 }}
+                            className={`flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 px-3 py-5 text-center shadow-sm transition-all sm:py-6 ${
                               answers.transitMode === opt.value
-                                ? "border-[#163D73] bg-[#163D73]/[0.05] text-[#0A0A0A]"
-                                : "border-[#E5E7EB] text-[#666666] hover:border-[#D1D5DB]"
+                                ? "border-[#163D73] bg-[#163D73]/[0.06] text-[#0A0A0A] shadow-[#163D73]/10"
+                                : "border-[#E5E7EB] bg-white text-[#666666] hover:border-[#D1D5DB] hover:shadow-md"
                             }`}
                           >
-                            <span className="text-xl sm:text-2xl">
+                            <span className="text-2xl sm:text-3xl">
                               {opt.icon}
                             </span>
                             <span
-                              className="text-[11px] sm:text-xs"
+                              className="text-xs"
                               style={{ fontWeight: 500 }}
                             >
                               {opt.label}
                             </span>
                             {answers.transitMode === opt.value && (
-                              <CheckCircle className="size-3.5 text-[#163D73]" />
+                              <CheckCircle className="size-4 text-[#163D73]" />
                             )}
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </div>
 
-                    <div>
+                    <div id="priority-group">
                       <label
-                        className="mb-3 block text-sm text-[#0A0A0A]"
+                        className="mb-4 block text-sm text-[#0A0A0A]"
                         style={{ fontWeight: 500 }}
                       >
                         What matters most?
                       </label>
-                      <div className="space-y-2">
-                        {priorityOptions.map((opt) => (
-                          <button
+                      <div className="space-y-3">
+                        {priorityOptions.map((opt, i) => (
+                          <motion.button
                             key={opt.value}
                             type="button"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 + i * 0.06 }}
                             onClick={() =>
                               setAnswers((prev) => ({
                                 ...prev,
                                 priority: opt.value,
                               }))
                             }
-                            className={`flex w-full items-center gap-4 rounded border px-5 py-4 text-left transition-all ${
+                            whileTap={{ scale: 0.98 }}
+                            className={`flex w-full cursor-pointer items-center gap-4 rounded-lg border-2 px-5 py-5 text-left shadow-sm transition-all ${
                               answers.priority === opt.value
-                                ? "border-[#163D73] bg-[#163D73]/[0.05]"
-                                : "border-[#E5E7EB] hover:border-[#D1D5DB]"
+                                ? "border-[#163D73] bg-[#163D73]/[0.06] shadow-[#163D73]/10"
+                                : "border-[#E5E7EB] bg-white hover:border-[#D1D5DB] hover:shadow-md"
                             }`}
                           >
                             <div
-                              className={`flex size-4 shrink-0 items-center justify-center rounded-full border-2 ${
+                              className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
                                 answers.priority === opt.value
-                                  ? "border-[#163D73]"
+                                  ? "border-[#163D73] bg-[#163D73]"
                                   : "border-[#D1D5DB]"
                               }`}
                             >
                               {answers.priority === opt.value && (
-                                <div className="size-2 rounded-full bg-[#163D73]" />
+                                <CheckCircle className="size-3.5 text-white" />
                               )}
                             </div>
                             <div>
@@ -1052,7 +1062,7 @@ export function QuizFlow() {
                                 {opt.description}
                               </div>
                             </div>
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </div>
@@ -1063,7 +1073,7 @@ export function QuizFlow() {
                   <button
                     type="button"
                     onClick={step === 0 ? goHome : prev}
-                    className="flex items-center gap-2 rounded px-4 py-2.5 text-sm text-[#666666] transition-colors hover:bg-[#F3F4F6] hover:text-[#0A0A0A]"
+                    className="flex cursor-pointer items-center gap-2 rounded px-4 py-2.5 text-sm text-[#666666] transition-colors hover:bg-[#F3F4F6] hover:text-[#0A0A0A]"
                   >
                     <ArrowLeft className="size-4" />
                     {step === 0 ? "Cancel" : "Back"}
@@ -1072,10 +1082,10 @@ export function QuizFlow() {
                     type="button"
                     onClick={next}
                     disabled={!canProceed()}
-                    className={`flex items-center gap-2 rounded px-6 py-2.5 text-sm font-medium transition-all ${
+                    className={`flex cursor-pointer items-center gap-2 rounded px-6 py-2.5 text-sm font-medium transition-all ${
                       canProceed()
                         ? "bg-[#163D73] text-white hover:bg-[#1a4682]"
-                        : "cursor-not-allowed bg-[#E5E7EB] text-[#9CA3AF]"
+                        : "bg-[#E5E7EB] text-[#9CA3AF]"
                     }`}
                   >
                     {step === TOTAL_STEPS - 1 ? "See results" : "Continue"}

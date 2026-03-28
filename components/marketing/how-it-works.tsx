@@ -28,7 +28,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="border-t border-[#E5E7EB] bg-white py-14 md:py-20"
+      className="border-t border-[#E5E7EB] py-14 md:py-20"
     >
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <motion.div

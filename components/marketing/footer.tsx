@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="border-t border-[#E5E7EB] bg-white py-8 md:py-12">
+    <footer className="border-t border-[#E5E7EB] py-8 md:py-12">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
           <div className="text-sm text-[#9CA3AF]">Stanko Tražić</div>

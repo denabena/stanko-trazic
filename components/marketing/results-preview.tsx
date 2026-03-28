@@ -48,7 +48,7 @@ export function ResultsPreview() {
   return (
     <section
       id="results"
-      className="border-t border-[#E5E7EB] bg-[#FAFAFA] py-14 md:py-20"
+      className="border-t border-[#E5E7EB] py-14 md:py-20"
     >
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="mb-8 text-center text-[11px] tracking-[0.15em] text-[#9CA3AF] uppercase md:mb-12">

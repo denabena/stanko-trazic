@@ -5,7 +5,7 @@ import { ArrowRight, Clock, MapPin, TrendingDown } from "lucide-react";
 
 export function Hero({ onStartQuiz }: { onStartQuiz: () => void }) {
   return (
-    <section className="bg-[#FAFAFA] pt-6 pb-12 md:pt-10 md:pb-20">
+    <section className="pt-6 pb-12 md:pt-10 md:pb-20">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <motion.div
@@ -33,7 +33,7 @@ export function Hero({ onStartQuiz }: { onStartQuiz: () => void }) {
               <motion.button
                 type="button"
                 onClick={onStartQuiz}
-                className="flex items-center justify-center gap-2 rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682] md:px-8 md:py-4"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded bg-[#163D73] px-6 py-3.5 font-medium text-white transition-colors hover:bg-[#1a4682] md:px-8 md:py-4"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -47,7 +47,7 @@ export function Hero({ onStartQuiz }: { onStartQuiz: () => void }) {
                     .getElementById("results")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="rounded border border-[#D1D5DB] bg-transparent px-6 py-3.5 font-medium text-[#0A0A0A] transition-colors hover:border-[#9CA3AF] md:px-8 md:py-4"
+                className="cursor-pointer rounded border border-[#D1D5DB] bg-transparent px-6 py-3.5 font-medium text-[#0A0A0A] transition-colors hover:border-[#9CA3AF] md:px-8 md:py-4"
               >
                 See sample report
               </button>
@@ -89,13 +89,13 @@ export function Hero({ onStartQuiz }: { onStartQuiz: () => void }) {
                     icon: Clock,
                     label: "Commute saved",
                     value: "7 min/day",
-                    color: "#666666",
+                    color: "#163D73",
                   },
                   {
                     icon: MapPin,
                     label: "Flats compared",
                     value: "2",
-                    color: "#666666",
+                    color: "#163D73",
                   },
                 ].map((stat, i) => (
                   <motion.div

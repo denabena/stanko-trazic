@@ -25,7 +25,7 @@ export function FeatureCallouts() {
   ];
 
   return (
-    <section className="border-t border-[#E5E7EB] bg-white py-14 md:py-20">
+    <section className="border-t border-[#E5E7EB] py-14 md:py-20">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="grid gap-8 md:grid-cols-3 md:gap-12 md:divide-x md:divide-[#E5E7EB]">
           {features.map((feature, idx) => (
@@ -39,7 +39,7 @@ export function FeatureCallouts() {
             >
               <div className="relative">
                 <div
-                  className="pointer-events-none absolute -top-4 left-0 select-none text-[#E5E7EB] opacity-80"
+                  className="pointer-events-none absolute -top-4 left-0 select-none text-[#163D73]/[0.08]"
                   style={{
                     fontSize: "clamp(80px, 10vw, 120px)",
                     fontWeight: 700,

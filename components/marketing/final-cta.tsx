@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 export function FinalCTA({ onStartQuiz }: { onStartQuiz: () => void }) {
   return (
-    <section className="bg-[#FAFAFA] py-14 md:py-20">
+    <section className="py-14 md:py-20">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <motion.div
           className="text-center"
@@ -25,7 +25,7 @@ export function FinalCTA({ onStartQuiz }: { onStartQuiz: () => void }) {
           <button
             type="button"
             onClick={onStartQuiz}
-            className="mb-4 rounded bg-[#163D73] px-10 py-4 text-lg font-medium text-white transition-colors hover:bg-[#1a4682]"
+            className="mb-4 cursor-pointer rounded bg-[#163D73] px-10 py-4 text-lg font-medium text-white transition-colors hover:bg-[#1a4682]"
           >
             Take the quiz
           </button>

@@ -19,7 +19,7 @@ export function MarketingPage() {
   const startQuiz = () => router.push("/quiz");
 
   return (
-    <div className="relative min-h-screen bg-[#FAFAFA]">
+    <div className="relative min-h-screen bg-white">
       <AnimatedBackground />
       <div className="relative z-10">
         <Navigation onStartQuiz={startQuiz} />

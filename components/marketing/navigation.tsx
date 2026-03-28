@@ -26,19 +26,20 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
 
   const handleNavClick = (id: string) => {
     setMobileMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navHeight = document.querySelector("nav")?.getBoundingClientRect().height ?? 80;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (
-    <motion.nav
+    <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled || mobileMenuOpen
           ? "bg-white/90 shadow-sm backdrop-blur-xl"
           : "bg-transparent"
       }`}
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
     >
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="flex h-14 items-center justify-between md:h-20">
@@ -50,7 +51,7 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
             >
               Stanko Tražić
               <span
-                className="mt-0.5 block text-[9px] tracking-wide text-[#9CA3AF] md:text-[10px]"
+                className="-mt-0.5 block text-[9px] tracking-wide text-[#9CA3AF] md:text-[10px]"
                 style={{ fontWeight: 400 }}
               >
                 /stahn-koh trah-zhich/
@@ -59,22 +60,24 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
           </div>
 
           <div className="hidden items-center gap-8 md:flex">
-            <a
-              href="#how-it-works"
-              className="text-sm text-[#666666] transition-colors hover:text-[#0A0A0A]"
+            <button
+              type="button"
+              onClick={() => handleNavClick("how-it-works")}
+              className="cursor-pointer text-sm text-[#666666] transition-colors hover:text-[#0A0A0A]"
             >
               How it works
-            </a>
-            <a
-              href="#about"
-              className="text-sm text-[#666666] transition-colors hover:text-[#0A0A0A]"
+            </button>
+            <button
+              type="button"
+              onClick={() => handleNavClick("about")}
+              className="cursor-pointer text-sm text-[#666666] transition-colors hover:text-[#0A0A0A]"
             >
               About
-            </a>
+            </button>
             <button
               type="button"
               onClick={onStartQuiz}
-              className="rounded bg-[#163D73] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1a4682]"
+              className="cursor-pointer rounded bg-[#163D73] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1a4682]"
             >
               Start comparing
             </button>
@@ -84,14 +87,14 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
             <button
               type="button"
               onClick={onStartQuiz}
-              className="rounded bg-[#163D73] px-4 py-2 text-xs font-medium text-white"
+              className="cursor-pointer rounded bg-[#163D73] px-4 py-2 text-xs font-medium text-white"
             >
               Start
             </button>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#0A0A0A]"
+              className="cursor-pointer p-2 text-[#0A0A0A]"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
@@ -117,21 +120,21 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
               <button
                 type="button"
                 onClick={() => handleNavClick("how-it-works")}
-                className="block w-full rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
+                className="block w-full cursor-pointer rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
               >
                 How it works
               </button>
               <button
                 type="button"
                 onClick={() => handleNavClick("results")}
-                className="block w-full rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
+                className="block w-full cursor-pointer rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
               >
                 Results preview
               </button>
               <button
                 type="button"
                 onClick={() => handleNavClick("about")}
-                className="block w-full rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
+                className="block w-full cursor-pointer rounded px-3 py-3 text-left text-sm text-[#666666] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
               >
                 About
               </button>
@@ -142,7 +145,7 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
                     setMobileMenuOpen(false);
                     onStartQuiz();
                   }}
-                  className="w-full rounded bg-[#163D73] px-4 py-3 text-sm font-medium text-white"
+                  className="w-full cursor-pointer rounded bg-[#163D73] px-4 py-3 text-sm font-medium text-white"
                 >
                   Start comparing
                 </button>
@@ -155,6 +158,6 @@ export function Navigation({ onStartQuiz }: { onStartQuiz: () => void }) {
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="h-px bg-[#E5E7EB]" />
       </div>
-    </motion.nav>
+    </nav>
   );
 }

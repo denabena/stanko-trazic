@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 export function AboutSection() {
   return (
-    <section id="about" className="border-t border-[#E5E7EB] bg-white py-14 md:py-20">
+    <section id="about" className="border-t border-[#E5E7EB] py-14 md:py-20">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <div className="mx-auto max-w-[900px]">
           <div className="mb-12 text-center text-[11px] tracking-[0.15em] text-[#9CA3AF] uppercase">
