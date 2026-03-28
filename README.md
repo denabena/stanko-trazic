@@ -1,3 +1,34 @@
+## Stanko Tražić
+
+Compare real monthly apartment costs in Zagreb (rent, utilities, commute, parking, neighborhood score).
+
+## Environment variables
+
+Create **`.env.local`** in the project root (copy from [`.env.local.example`](.env.local.example)). Next.js loads it automatically; restart `npm run dev` after changes.
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `GOOGLE_MAPS_DIRECTIONS_API_KEY` | Yes* | Commute (Directions API) |
+| `GOOGLE_PLACES_API_KEY` | Yes* | Autocomplete, neighborhood nearby search, geocoding / parking |
+| `GOOGLE_GEMINI_API_KEY` | No | Short “why this won” text after results |
+
+\*You can use the **same** Google Cloud API key for both if **Directions API**, **Places API (New)**, and **Geocoding API** are enabled for that key in [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials.
+
+### Google Gemini API key (optional)
+
+1. Open [Google AI Studio — API keys](https://aistudio.google.com/apikey).
+2. Sign in with your Google account.
+3. Click **Create API key** (you can create a new Google Cloud project or pick an existing one).
+4. Copy the key and add to `.env.local`:
+   ```bash
+   GOOGLE_GEMINI_API_KEY=paste_your_key_here
+   ```
+5. Restart the dev server.
+
+Do **not** commit `.env.local` or paste API keys into app source files.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -18,7 +49,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) with **Inter** for UI text.
 
 ## Learn More
 

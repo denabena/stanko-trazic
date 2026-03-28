@@ -69,6 +69,29 @@ function mapDirectionsPayloadToMetrics(
   return { durationSeconds, distanceMeters, legs };
 }
 
+/**
+ * Directions API requires place IDs as `place_id:ChIJ...`. Values from Places
+ * Autocomplete are bare IDs; free-text addresses are passed through unchanged.
+ */
+export function formatDirectionsQueryLocation(value: string): string {
+  const t = value.trim();
+  if (t.length === 0) {
+    return t;
+  }
+  const prefixed = t.match(/^place_id:(.*)$/i);
+  if (prefixed) {
+    return `place_id:${prefixed[1]!.trimStart()}`;
+  }
+  if (
+    !/\s/.test(t) &&
+    t.length >= 20 &&
+    /^[A-Za-z0-9_-]+$/.test(t)
+  ) {
+    return `place_id:${t}`;
+  }
+  return t;
+}
+
 export async function requestDirectionsCommuteMetrics(
   originAddress: string,
   destinationPlaceIdOrAddress: string,
@@ -76,8 +99,10 @@ export async function requestDirectionsCommuteMetrics(
 ): Promise<DirectionsCommuteMetrics | null> {
   try {
     const apiKey = process.env.GOOGLE_MAPS_DIRECTIONS_API_KEY;
-    const origin = originAddress.trim();
-    const destination = destinationPlaceIdOrAddress.trim();
+    const origin = formatDirectionsQueryLocation(originAddress);
+    const destination = formatDirectionsQueryLocation(
+      destinationPlaceIdOrAddress,
+    );
     if (!apiKey || origin.length === 0 || destination.length === 0) {
       return null;
     }

@@ -21,8 +21,13 @@ export interface ApartmentCandidate {
 
 export interface WorkOrUniversityDestination {
   label: string;
-  /** Resolved place ID or address string used for routing and storage */
+  /** Place ID or free-text address passed to Directions / APIs */
   placeIdOrAddress: string;
+  /**
+   * Full address line for UI when `placeIdOrAddress` is a place_id (from Autocomplete).
+   * Optional for older saved sessions.
+   */
+  placeDescription?: string;
 }
 
 export interface ApartmentEntryStepState {

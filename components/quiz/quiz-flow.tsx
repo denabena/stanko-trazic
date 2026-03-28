@@ -48,8 +48,6 @@ type DraftApartment = {
 type QuizDraft = {
   apartments: DraftApartment[];
   destination: WorkOrUniversityDestination;
-  /** Autocomplete display line; may differ from `placeIdOrAddress` when a Places `placeId` is stored */
-  destinationPlaceDisplay: string;
   transitMode: TransitMode | "";
   priority: UserPriority | "";
 };
@@ -443,7 +441,6 @@ export function QuizFlow() {
   const [answers, setAnswers] = useState<QuizDraft>(() => ({
     apartments: [emptyApartment(), emptyApartment()],
     destination: { label: "", placeIdOrAddress: "" },
-    destinationPlaceDisplay: "",
     transitMode: "",
     priority: "",
   }));
@@ -493,8 +490,7 @@ export function QuizFlow() {
     }
     setAnswers({
       apartments: drafts.slice(0, MAX_APARTMENT_CANDIDATES),
-      destination: apartmentEntry.destination,
-      destinationPlaceDisplay: apartmentEntry.destination.placeIdOrAddress,
+      destination: { ...apartmentEntry.destination },
       transitMode: quiz.transitMode,
       priority: quiz.priority,
     });
@@ -577,11 +573,17 @@ export function QuizFlow() {
     ) {
       return;
     }
+    const destLabel = answers.destination.label.trim();
+    const destPlace = answers.destination.placeIdOrAddress.trim();
+    const destDesc = answers.destination.placeDescription?.trim();
     const entry: ApartmentEntryStepState = {
       apartments: validApartments,
       destination: {
-        label: answers.destination.label.trim(),
-        placeIdOrAddress: answers.destination.placeIdOrAddress.trim(),
+        label: destLabel,
+        placeIdOrAddress: destPlace,
+        ...(destDesc
+          ? { placeDescription: destDesc }
+          : {}),
       },
     };
     const quiz: TransitPriorityQuizAnswers = {
@@ -925,24 +927,27 @@ export function QuizFlow() {
                           <AddressAutocompleteInput
                             id="dest-place"
                             showMapPin={false}
-                            value={answers.destinationPlaceDisplay}
+                            value={
+                              answers.destination.placeDescription ??
+                              answers.destination.placeIdOrAddress
+                            }
                             onChange={(v) =>
                               setAnswers((prev) => ({
                                 ...prev,
-                                destinationPlaceDisplay: v,
                                 destination: {
                                   ...prev.destination,
-                                  placeIdOrAddress: v.trim(),
+                                  placeIdOrAddress: v,
+                                  placeDescription: v,
                                 },
                               }))
                             }
                             onPickSuggestion={(s) => {
                               setAnswers((prev) => ({
                                 ...prev,
-                                destinationPlaceDisplay: s.description,
                                 destination: {
                                   ...prev.destination,
                                   placeIdOrAddress: s.placeId,
+                                  placeDescription: s.description,
                                 },
                               }));
                             }}
