@@ -116,3 +116,27 @@ export const GEMINI_GENERATE_CONTENT_MODEL = "gemini-2.0-flash";
 /** Gemini REST API base (v1beta) */
 export const GEMINI_REST_API_BASE =
   "https://generativelanguage.googleapis.com/v1beta/models";
+/** Average working days per month for commute cost projection */
+export const WORKING_DAYS_PER_MONTH = 22;
+
+/** One-way trips per working day (home → work, work → home) */
+export const COMMUTE_ROUND_TRIPS_PER_DAY = 2;
+
+/** Zagreb parking zone monthly pass prices (€) — approximate commuter rates */
+export const PARKING_ZONE_MONTHLY_EUROS: Record<string, number> = {
+  "1": 66,
+  "2": 40,
+  "3": 26,
+};
+
+/** Fallback when apartment is outside any paid parking zone */
+export const PARKING_NO_ZONE_DEFAULT_EUROS = 0;
+
+/** QoL scoring weights per amenity category (relative importance) */
+export const QOL_WEIGHT_SHOPS = 3;
+export const QOL_WEIGHT_PARKS = 4;
+export const QOL_WEIGHT_PHARMACIES = 2;
+export const QOL_WEIGHT_CAFES = 1;
+
+/** Count at which an amenity category is considered fully saturated */
+export const QOL_SATURATION_COUNT = 10;
